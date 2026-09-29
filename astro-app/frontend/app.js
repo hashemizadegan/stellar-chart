@@ -125,6 +125,7 @@ $("#birth-form").onsubmit = async e => {
     renderChart(await api("/api/chart", { method: "POST", body: {
       birth_date: f.birth_date.value, birth_time: f.birth_time.value || null, birth_place: f.birth_place.value } }));
     state.me.has_chart = true;
+    loadReport();
     loadSubscriberContent();
   } catch (x) { err.textContent = x.message; }
   btn.disabled = false; btn.textContent = "Calculate my chart";
@@ -140,6 +141,23 @@ $("#subscribe").onclick = async e => {
 /* ---------- Readings & questions ---------- */
 const esc = t => t.replace(/[&<>]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[ch]));
 const paras = t => esc(t).split(/\n{2,}/).map(p => `<p>${p}</p>`).join("");
+const reportHTML = t => esc(t).replace(/\*\*/g, "").split("\n").map(l => l.trim()).reduce((out, line) => {
+  if (line.startsWith("## ")) out.push({ h: line.slice(3) });
+  else if (!line) out.push({ p: "" });
+  else if (out.length && out[out.length - 1].p !== undefined) out[out.length - 1].p += (out[out.length - 1].p ? " " : "") + line;
+  else out.push({ p: line });
+  return out;
+}, []).map(b => b.h !== undefined ? `<h3>${b.h}</h3>` : b.p ? `<p>${b.p}</p>` : "").join("");
+
+async function loadReport() {
+  $("#report-panel").hidden = false;
+  $("#report").innerHTML = `<p class="hint">Writing your chart report. This takes about half a minute the first time…</p>`;
+  try { $("#report").innerHTML = reportHTML((await api("/api/chart/report")).content); }
+  catch (x) {
+    if (x.status === 402) $("#report").innerHTML = `<p>${esc(x.message)}</p>`;
+    else $("#report").innerHTML = `<p class="error">${esc(x.message)}</p>`;
+  }
+}
 
 async function loadSubscriberContent() {
   const ok = state.me.is_active_subscriber && state.me.has_chart;
@@ -190,7 +208,7 @@ async function boot() {
   show("app");
   $("#subscription").hidden = state.me.is_active_subscriber;
   renderSettings(state.me);
-  if (state.me.has_chart) renderChart(await api("/api/chart"));
+  if (state.me.has_chart) { renderChart(await api("/api/chart")); loadReport(); }
   loadSubscriberContent();
 }
 boot();
