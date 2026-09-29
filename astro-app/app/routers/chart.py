@@ -54,10 +54,10 @@ def get_chart(user: User = Depends(current_user)):
 
 
 @router.get("/report")
-def get_report(user: User = Depends(current_user)):
+def get_report(lang: str = "en", user: User = Depends(current_user)):
     """The person's general natal report, built from the chart with the free interpretation library."""
     if not user.chart:
         raise HTTPException(404, "Add your birth details to get your chart report.")
     if not get_settings().free_natal_report and not user.is_active_subscriber:
         raise HTTPException(402, "Your full chart report is included with a subscription.")
-    return {"content": natal_report(user.full_name, user.chart.data)}
+    return {"content": natal_report(user.full_name, user.chart.data, "fa" if lang == "fa" else "en")}
