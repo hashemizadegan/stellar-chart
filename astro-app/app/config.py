@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     subscription_price_usd: float = 9.99
     subscription_days: int = 30
     questions_per_day: int = 5
+    free_natal_report: bool = True  # False = subscribers only
 
     nowpayments_api_key: str = ""
     nowpayments_ipn_secret: str = ""
