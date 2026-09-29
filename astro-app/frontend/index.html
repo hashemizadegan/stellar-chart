@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Stellar Chart</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="/">Stellar Chart</a>
+    <button id="logout" class="link" hidden>Sign out</button>
+  </header>
+
+  <!-- Signed out -->
+  <main id="view-auth" class="auth" hidden>
+    <section class="intro">
+      <h1>The sky at the minute you were born, read for you every morning.</h1>
+      <p>Enter your birth date, time and place. We calculate your natal chart with the Swiss Ephemeris,
+         then send a personal reading each day and answer your questions about it.</p>
+    </section>
+    <form id="auth-form" class="panel" novalidate>
+      <div class="tabs" role="tablist">
+        <button type="button" role="tab" data-mode="register" aria-selected="true">Create account</button>
+        <button type="button" role="tab" data-mode="login" aria-selected="false">Sign in</button>
+      </div>
+      <label data-only="register">Full name<input name="full_name" autocomplete="name"></label>
+      <label>Email<input name="email" type="email" autocomplete="email" required></label>
+      <label>Password<input name="password" type="password" minlength="8" autocomplete="current-password" required></label>
+      <p class="error" role="alert"></p>
+      <button class="primary" type="submit">Create account</button>
+    </form>
+  </main>
+
+  <!-- Signed in -->
+  <main id="view-app" hidden>
+    <section id="subscription" class="notice" hidden>
+      <div>
+        <h2>Start your subscription</h2>
+        <p>Daily readings and questions need an active plan. Pay in USDT; your plan starts as soon as the payment confirms.</p>
+      </div>
+      <button id="subscribe" class="primary">Pay with USDT</button>
+    </section>
+
+    <section class="grid">
+      <div class="wheel-col">
+        <figure id="wheel" class="wheel" aria-label="Your natal chart wheel">
+          <p class="empty">Your chart wheel appears here once your birth details are saved.</p>
+        </figure>
+        <p id="big-three" class="big-three"></p>
+      </div>
+
+      <div class="side">
+        <form id="birth-form" class="panel">
+          <h2>Birth details</h2>
+          <label>Date of birth<input name="birth_date" type="date" required></label>
+          <label>Time of birth <span class="hint">as on the birth certificate; leave empty if unknown</span>
+            <input name="birth_time" type="time"></label>
+          <label>Place of birth<input name="birth_place" placeholder="City, country" required></label>
+          <p class="error" role="alert"></p>
+          <button class="primary" type="submit">Calculate my chart</button>
+          <p id="birth-saved" class="hint"></p>
+        </form>
+      </div>
+    </section>
+
+    <section id="placements" class="panel" hidden>
+      <h2>Placements</h2>
+      <div class="table-wrap"><table><thead><tr><th>Body</th><th>Position</th><th>House</th></tr></thead><tbody></tbody></table></div>
+    </section>
+
+    <section class="panel reading" id="today-panel" hidden>
+      <h2>Today</h2>
+      <div id="today"><p class="hint">Loading today's reading…</p></div>
+    </section>
+
+    <section class="panel" id="ask-panel" hidden>
+      <h2>Ask about your chart</h2>
+      <form id="ask-form">
+        <textarea name="question" rows="3" placeholder="For example: What does my chart say about changing careers this year?" required></textarea>
+        <p class="error" role="alert"></p>
+        <button class="primary" type="submit">Ask</button>
+      </form>
+      <ol id="history" class="history"></ol>
+    </section>
+
+    <section class="panel" id="settings">
+      <h2>Notifications</h2>
+      <label class="row">Send my reading at
+        <select name="notify_hour"></select> local time</label>
+      <label class="row check"><input type="checkbox" name="notify_email"> Email me the daily reading</label>
+      <p id="telegram"></p>
+      <button id="delete-account" class="link danger">Delete my account and data</button>
+    </section>
+
+    <p class="disclaimer">Astrology readings are for reflection and entertainment and are not professional advice.</p>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
