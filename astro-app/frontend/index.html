@@ -1,37 +1,39 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Stellar Chart</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Figtree:wght@400;500;600&family=Vazirmatn:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header class="top">
-    <a class="brand" href="/">Stellar Chart</a>
-    <button id="logout" class="link" hidden>Sign out</button>
+    <a class="brand" href="/" data-i18n="brand">Stellar Chart</a>
+    <div class="top-actions">
+      <button id="lang" class="lang" type="button">فارسی</button>
+      <button id="logout" class="link" hidden data-i18n="signOut">Sign out</button>
+    </div>
   </header>
 
   <!-- Signed out -->
   <main id="view-auth" class="auth" hidden>
     <section class="intro">
-      <h1>The sky at the minute you were born, read for you every morning.</h1>
-      <p>Enter your birth date, time and place. We calculate your natal chart with the Swiss Ephemeris,
-         then send a personal reading each day and answer your questions about it.</p>
+      <h1 data-i18n="heroTitle"></h1>
+      <p data-i18n="heroText"></p>
     </section>
     <form id="auth-form" class="panel" novalidate>
       <div class="tabs" role="tablist">
-        <button type="button" role="tab" data-mode="register" aria-selected="true">Create account</button>
-        <button type="button" role="tab" data-mode="login" aria-selected="false">Sign in</button>
+        <button type="button" role="tab" data-mode="register" aria-selected="true" data-i18n="tabRegister"></button>
+        <button type="button" role="tab" data-mode="login" aria-selected="false" data-i18n="tabLogin"></button>
       </div>
-      <label data-only="register">Full name<input name="full_name" autocomplete="name"></label>
-      <label>Email<input name="email" type="email" autocomplete="email" required></label>
-      <label>Password<input name="password" type="password" minlength="8" autocomplete="current-password" required></label>
+      <label data-only="register"><span data-i18n="fullName"></span><input name="full_name" autocomplete="name"></label>
+      <label><span data-i18n="email"></span><input name="email" type="email" autocomplete="email" dir="ltr" required></label>
+      <label><span data-i18n="password"></span><input name="password" type="password" minlength="8" autocomplete="current-password" dir="ltr" required></label>
       <p class="error" role="alert"></p>
-      <button class="primary" type="submit">Create account</button>
+      <button class="primary" type="submit"></button>
     </form>
   </main>
 
@@ -39,69 +41,69 @@
   <main id="view-app" hidden>
     <section id="subscription" class="notice" hidden>
       <div>
-        <h2>Start your subscription</h2>
-        <p>Daily readings and questions need an active plan. Pay in USDT; your plan starts as soon as the payment confirms.</p>
+        <h2 data-i18n="subTitle"></h2>
+        <p data-i18n="subText"></p>
       </div>
-      <button id="subscribe" class="primary">Pay with USDT</button>
+      <button id="subscribe" class="primary" data-i18n="payBtn"></button>
     </section>
 
     <section class="grid">
       <div class="wheel-col">
-        <figure id="wheel" class="wheel" aria-label="Your natal chart wheel">
-          <p class="empty">Your chart wheel appears here once your birth details are saved.</p>
+        <figure id="wheel" class="wheel">
+          <p class="empty" data-i18n="wheelEmpty"></p>
         </figure>
         <p id="big-three" class="big-three"></p>
       </div>
 
       <div class="side">
         <form id="birth-form" class="panel">
-          <h2>Birth details</h2>
-          <label>Date of birth<input name="birth_date" type="date" required></label>
-          <label>Time of birth <span class="hint">as on the birth certificate; leave empty if unknown</span>
+          <h2 data-i18n="birthTitle"></h2>
+          <label><span data-i18n="birthDate"></span><input name="birth_date" type="date" required></label>
+          <label><span data-i18n="birthTime"></span> <span class="hint" data-i18n="birthTimeHint"></span>
             <input name="birth_time" type="time"></label>
-          <label>Place of birth<input name="birth_place" placeholder="City, country" required></label>
+          <label><span data-i18n="birthPlace"></span><input name="birth_place" data-i18n-ph="placePh" required></label>
           <p class="error" role="alert"></p>
-          <button class="primary" type="submit">Calculate my chart</button>
+          <button class="primary" type="submit" data-i18n="calcBtn"></button>
           <p id="birth-saved" class="hint"></p>
         </form>
       </div>
     </section>
 
     <section id="placements" class="panel" hidden>
-      <h2>Placements</h2>
-      <div class="table-wrap"><table><thead><tr><th>Body</th><th>Position</th><th>House</th></tr></thead><tbody></tbody></table></div>
+      <h2 data-i18n="placementsTitle"></h2>
+      <div class="table-wrap"><table><thead><tr><th data-i18n="thBody"></th><th data-i18n="thPos"></th><th data-i18n="thHouse"></th></tr></thead><tbody></tbody></table></div>
     </section>
 
     <section class="panel report" id="report-panel" hidden>
-      <h2>Your chart report</h2>
+      <h2 data-i18n="reportTitle"></h2>
       <div id="report"></div>
     </section>
 
     <section class="panel reading" id="today-panel" hidden>
-      <h2>Today</h2>
-      <div id="today"><p class="hint">Loading today's reading…</p></div>
+      <h2 data-i18n="todayTitle"></h2>
+      <div id="today"></div>
     </section>
 
     <section class="panel" id="ask-panel" hidden>
-      <h2>Ask about your chart</h2>
+      <h2 data-i18n="askTitle"></h2>
       <form id="ask-form">
-        <textarea name="question" rows="3" placeholder="For example: What does my chart say about changing careers this year?" required></textarea>
+        <textarea name="question" rows="3" data-i18n-ph="askPh" required></textarea>
         <p class="error" role="alert"></p>
-        <button class="primary" type="submit">Ask</button>
+        <button class="primary" type="submit" data-i18n="askBtn"></button>
       </form>
       <ol id="history" class="history"></ol>
     </section>
 
     <section class="panel" id="settings">
-      <h2>Notifications</h2>
-      <label class="row">Send my reading at
-        <select name="notify_hour"></select> local time</label>
-      <label class="row check"><input type="checkbox" name="notify_email"> Email me the daily reading</label>
+      <h2 data-i18n="notifTitle"></h2>
+      <label class="row"><span data-i18n="sendAt"></span>
+        <select name="notify_hour" dir="ltr"></select> <span data-i18n="localTime"></span></label>
+      <label class="row check"><input type="checkbox" name="notify_email"> <span data-i18n="emailMe"></span></label>
       <p id="telegram"></p>
-      <button id="delete-account" class="link danger">Delete my account and data</button>
+      <button id="delete-account" class="link danger" data-i18n="deleteAcc"></button>
     </section>
 
-    <p class="disclaimer">Astrology readings are for reflection and entertainment and are not professional advice.</p>
+    <p class="disclaimer" data-i18n="disclaimer"></p>
   </main>
 
   <script src="app.js"></script>

@@ -92,3 +92,24 @@ th { color: var(--muted); font-weight: 500; font-size: .9rem; }
              color: var(--brass); margin: 1.6rem 0 .5rem; }
 .report h3:first-child { margin-top: .4rem; }
 .report p { font-size: 1.04rem; }
+
+/* ---------- Header actions & language switch ---------- */
+.top-actions { display: flex; gap: 1.1rem; align-items: center; }
+.lang { background: none; border: 1px solid var(--line); border-radius: 999px; color: var(--ink);
+        padding: .3rem .9rem; font: 500 .95rem var(--body); cursor: pointer; }
+.lang:hover { border-color: var(--brass); }
+
+/* ---------- Right-to-left (Persian) ---------- */
+html[dir="rtl"] {
+  --display: "Vazirmatn", Tahoma, "Segoe UI", sans-serif;
+  --body: "Vazirmatn", Tahoma, "Segoe UI", sans-serif;
+}
+html[dir="rtl"] body { line-height: 1.9; }
+html[dir="rtl"] h1 { line-height: 1.4; font-weight: 600; }
+html[dir="rtl"] h2, html[dir="rtl"] .report h3 { font-weight: 600; }
+html[dir="rtl"] .lang { font-family: "Vazirmatn", Tahoma, sans-serif; }
+th, td { text-align: start; }
+.glyph { margin-right: 0; margin-inline-end: .4rem; }
+.big-three span { margin-right: 0; margin-inline-end: .3rem; }
+.big-three b { margin-right: 0; margin-inline-end: 1.2rem; }
+.wheel svg { direction: ltr; }
