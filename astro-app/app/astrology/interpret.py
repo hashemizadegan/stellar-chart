@@ -139,7 +139,7 @@ def _join(items):
     return items[0] if len(items) == 1 else ", ".join(items[:-1]) + " and " + items[-1]
 
 
-def natal_report(name: str, chart: dict) -> str:
+def _natal_report_en(name: str, chart: dict) -> str:
     p = chart["planets"]
     sun, moon = _sign(chart, "Sun"), _sign(chart, "Moon")
     rising = chart["summary"].get("rising")
@@ -240,3 +240,11 @@ def natal_report(name: str, chart: dict) -> str:
     s.append(("Work and purpose", [work]))
 
     return "\n\n".join(f"## {title}\n" + "\n\n".join(paras) for title, paras in s)
+
+
+def natal_report(name: str, chart: dict, lang: str = "en") -> str:
+    """Return the report in English ("en") or Persian ("fa")."""
+    if lang == "fa":
+        from app.astrology.interpret_fa import natal_report_fa
+        return natal_report_fa(name, chart)
+    return _natal_report_en(name, chart)
