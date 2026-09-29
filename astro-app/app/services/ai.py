@@ -32,6 +32,39 @@ def _chart_context(name: str, natal: dict, transits: dict | None = None) -> str:
     return json.dumps(ctx, ensure_ascii=False)
 
 
+NATAL_REPORT_PROMPT = """Write a personal natal chart report for {name} from the chart data below.
+
+Use exactly these sections, each starting with a line "## " plus the title:
+## Overview
+## Sun, Moon and Rising
+## Key aspects
+## Strengths
+## Challenges and growth
+## Love and relationships
+## Work and purpose
+
+Guidance:
+- 800 to 1100 words in total. Plain paragraphs only: no bullet points, no bold, no tables.
+- In "Key aspects", discuss the four to six tightest aspects by name (for example "Moon square Saturn"),
+  explaining what each means in everyday life.
+- Mention element balance where it adds insight, and any retrograde personal planets.
+- If the birth time is unknown, say briefly that the rising sign and houses can't be read, and don't use them.
+- Speak directly to the person ("you"), warmly and specifically. Frame challenges as growth, never as fate.
+
+{context}"""
+
+
+def natal_report(name: str, natal: dict) -> str:
+    msg = _client().messages.create(
+        model=get_settings().anthropic_model,
+        max_tokens=3000,
+        system=SYSTEM,
+        messages=[{"role": "user", "content":
+                   NATAL_REPORT_PROMPT.format(name=name, context=_chart_context(name, natal))}],
+    )
+    return "".join(b.text for b in msg.content if b.type == "text").strip()
+
+
 def daily_reading(name: str, natal: dict, transits: dict) -> str:
     msg = _client().messages.create(
         model=get_settings().anthropic_model,
