@@ -5,12 +5,12 @@ from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
 from app.astrology.chart import natal_chart
+from app.astrology.interpret import natal_report
 from app.astrology.geo import PlaceNotFound, geocode, local_to_utc
 from app.auth import current_user
 from app.config import get_settings
 from app.database import get_db
 from app.models import BirthChart, Message, User
-from app.services import ai
 from app.schemas import BirthDataIn
 
 router = APIRouter(prefix="/api/chart", tags=["chart"])
@@ -54,21 +54,10 @@ def get_chart(user: User = Depends(current_user)):
 
 
 @router.get("/report")
-def get_report(user: User = Depends(current_user), db: Session = Depends(get_db)):
-    """The person's general natal report. Written once per chart, then served from the database."""
+def get_report(user: User = Depends(current_user)):
+    """The person's general natal report, built from the chart with the free interpretation library."""
     if not user.chart:
         raise HTTPException(404, "Add your birth details to get your chart report.")
     if not get_settings().free_natal_report and not user.is_active_subscriber:
         raise HTTPException(402, "Your full chart report is included with a subscription.")
-    existing = db.scalar(select(Message).where(Message.user_id == user.id, Message.kind == "natal")
-                         .order_by(Message.created_at.desc()))
-    if existing:
-        return {"content": existing.content, "created_at": existing.created_at}
-    try:
-        text = ai.natal_report(user.full_name, user.chart.data)
-    except Exception:
-        raise HTTPException(502, "Your report couldn't be written just now. Reload the page to try again.")
-    msg = Message(user_id=user.id, kind="natal", content=text)
-    db.add(msg)
-    db.commit()
-    return {"content": text, "created_at": msg.created_at}
+    return {"content": natal_report(user.full_name, user.chart.data)}
